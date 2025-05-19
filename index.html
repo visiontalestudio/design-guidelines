@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VisionTale React Native - Design Guidelines</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* Light Theme Colors */
+        --primary: #00696d;
+        --primary-container: #65c3c8;
+        --on-primary: #ffffff;
+        --on-primary-container: #004f52;
+        --secondary: #7a5366;
+        --secondary-container: #f2c0d7;
+        --on-secondary: #ffffff;
+        --on-secondary-container: #724c5f;
+        --tertiary: #715c00;
+        --tertiary-container: #f7d768;
+        --on-tertiary: #ffffff;
+        --on-tertiary-container: #715d00;
+        --background: #f6fafa;
+        --on-background: #181c1d;
+        --surface: #f6fafa;
+        --on-surface: #181c1d;
+        --surface-variant: #d9e5e5;
+        --on-surface-variant: #3e4949;
+        --error: #ba1a1a;
+        --error-container: #ffdad6;
+        --on-error: #ffffff;
+        --on-error-container: #93000a;
+
+        /* Spacing */
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+        --spacing-xl: 32px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Quicksand", sans-serif;
+        background-color: var(--background);
+        color: var(--on-background);
+        line-height: 1.6;
+        padding: 24px;
+        margin: 0;
+      }
+
+      header {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-container)
+        );
+        color: var(--on-primary);
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      header::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 20px;
+        background: var(--background);
+        border-radius: 50% 50% 0 0;
+      }
+
+      h1 {
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      h2 {
+        font-weight: 600;
+        font-size: 1.8rem;
+        margin: 2rem 0 1rem;
+        color: var(--primary);
+        border-bottom: 2px solid var(--primary-container);
+        padding-bottom: 0.5rem;
+      }
+
+      h3 {
+        font-weight: 600;
+        font-size: 1.4rem;
+        margin: 1.5rem 0 1rem;
+        color: var(--secondary);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: var(--surface);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .section {
+        margin-bottom: 3rem;
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 100;
+        background-color: var(--surface);
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        padding: 10px 15px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .theme-toggle:hover {
+        background-color: var(--primary);
+        color: var(--on-primary);
+      }
+
+      .color-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .color-item {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .color-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .color-preview {
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      .color-preview-text {
+        background-color: rgba(255, 255, 255, 0.85);
+        color: #000;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-weight: 500;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .color-preview:hover .color-preview-text {
+        opacity: 1;
+      }
+
+      .color-info {
+        padding: 1rem;
+        background-color: var(--surface);
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .color-name {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .color-hex {
+        font-family: monospace;
+        background-color: var(--surface-variant);
+        padding: 0.5rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        position: relative;
+        user-select: all;
+      }
+
+      .color-hex:hover {
+        background-color: var(--primary-container);
+      }
+
+      .copy-btn {
+        background-color: var(--primary);
+        color: var(--on-primary);
+        border: none;
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+        transition: background-color 0.2s ease;
+      }
+
+      .copy-btn:hover {
+        background-color: var(--secondary);
+      }
+
+      .font-section {
+        margin-top: 2rem;
+      }
+
+      .font-preview {
+        padding: 1.5rem;
+        border-radius: 8px;
+        background-color: var(--surface-variant);
+        margin-bottom: 1.5rem;
+      }
+
+      .font-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .font-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .font-name {
+        width: 150px;
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .font-example {
+        flex-grow: 1;
+      }
+
+      .font-value {
+        width: 200px;
+        font-family: monospace;
+        background-color: var(--surface);
+        padding: 0.5rem;
+        border-radius: 4px;
+        user-select: all;
+      }
+
+      .font-light {
+        font-weight: 300;
+      }
+
+      .font-regular {
+        font-weight: 400;
+      }
+
+      .font-medium {
+        font-weight: 500;
+      }
+
+      .font-semibold {
+        font-weight: 600;
+      }
+
+      .font-bold {
+        font-weight: 700;
+      }
+
+      .spacing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .spacing-item {
+        padding: 1.5rem;
+        border-radius: 8px;
+        background-color: var(--surface-variant);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .spacing-name {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--primary);
+      }
+
+      .spacing-value {
+        font-family: monospace;
+        background-color: var(--surface);
+        padding: 0.5rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        user-select: all;
+      }
+
+      .spacing-preview {
+        width: 100%;
+        background-color: var(--primary-container);
+        border-radius: 4px;
+      }
+
+      .tailwind-colors {
+        margin-top: 2rem;
+      }
+      
+      .tailwind-colors-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .color-category {
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        width: calc(50% - 0.75rem);
+        display: inline-block;
+        vertical-align: top;
+      }
+      
+      .color-category:nth-child(odd) {
+        margin-right: 1.5rem;
+      }
+      
+      .color-category h3 {
+        margin-top: 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        font-size: 1.2rem;
+      }
+
+      .color-shades {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        justify-content: flex-start;
+      }
+
+      .color-shade {
+        width: 60px;
+        height: 60px;
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 0;
+        font-size: 0.7rem;
+        font-weight: 600;
+        position: relative;
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+      }
+
+      .color-shade:hover {
+        transform: scale(1.05);
+      }
+
+      .color-shade span:first-child {
+        font-size: 0.8rem;
+      }
+
+      .color-shade span:last-child {
+        font-size: 0.6rem;
+        font-family: monospace;
+      }
+
+      .theme-comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .theme-panel {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .theme-panel-header {
+        padding: 1rem;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .light-theme-header {
+        background-color: #f6fafa;
+        color: #181c1d;
+      }
+
+      .dark-theme-header {
+        background-color: #101414;
+        color: #dfe3e3;
+      }
+
+      .theme-panel-content {
+        padding: 1.5rem;
+      }
+
+      .light-theme-content {
+        background-color: #f6fafa;
+        color: #181c1d;
+      }
+
+      .dark-theme-content {
+        background-color: #101414;
+        color: #dfe3e3;
+      }
+
+      .theme-color-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+      }
+
+      .theme-color-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .theme-color-preview {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        margin-right: 1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .theme-color-info {
+        flex-grow: 1;
+      }
+
+      .theme-color-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .theme-color-value {
+        font-family: monospace;
+        font-size: 0.8rem;
+        user-select: all;
+      }
+
+      .copy-tooltip {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 1000;
+      }
+
+      .copy-tooltip.show {
+        opacity: 1;
+      }
+
+      @media (max-width: 768px) {
+        .theme-comparison {
+          grid-template-columns: 1fr;
+        }
+
+        .color-grid {
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+
+        .font-row {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .font-name,
+        .font-value {
+          width: 100%;
+          margin-bottom: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>VISIONTALE</h1>
+      <p>Design Guidelines & Theme Documentation</p>
+    </header>
+
+    
+
+    <div class="container">
+      <div class="section">
+        <h2>Material Design 3 Colors</h2>
+        <p>
+          The primary color palette for the application, based on Material
+          Design 3 principles.
+        </p>
+
+        <div class="color-grid">
+          <div class="color-item">
+            <div class="color-preview" style="background-color: #00696d">
+              <div class="color-preview-text">Primary</div>
+            </div>
+            <div class="color-info">
+              <div class="color-name">
+                Primary
+                <button class="copy-btn" data-color="#00696D">📋</button>
+              </div>
+              <div class="color-hex">#00696D</div>
+            </div>
+          </div>
+
+          <div class="color-item">
+            <div class="color-preview" style="background-color: #65c3c8">
+              <div class="color-preview-text">Primary Container</div>
+            </div>
+            <div class="color-info">
+              <div class="color-name">
+                Primary Container
+                <button class="copy-btn" data-color="#65C3C8">📋</button>
+              </div>
+              <div class="color-hex">#65C3C8</div>
+            </div>
+          </div>
+
+          <div class="color-item">
+            <div class="color-preview" style="background-color: #7a5366">
+              <div class="color-preview-text">Secondary</div>
+            </div>
+            <div class="color-info">
+              <div class="color-name">
+                Secondary
+                <button class="copy-btn" data-color="#7A5366">📋</button>
+              </div>
+              <div class="color-hex">#7A5366</div>
+            </div>
+          </div>
+
+          <div class="color-item">
+            <div class="color-preview" style="background-color: #f2c0d7">
+              <div class="color-preview-text">Secondary Container</div>
+            </div>
+            <div class="color-info">
+              <div class="color-name">
+                Secondary Container
+                <button class="copy-btn" data-color="#F2C0D7">📋</button>
+              </div>
+              <div class="color-hex">#F2C0D7</div>
+            </div>
+          </div>
+
+          <div class="color-item">
+            <div class="color-preview" style="background-color: #715c00">
+              <div class="color-preview-text">Tertiary</div>
+            </div>
+            <div class="color-info">
+              <div class="color-name">
+                Tertiary
+                <button class="copy-btn" data-color="#715C00">📋</button>
+              </div>
+              <div class="color-hex">#715C00</div>
+            </div>
+          </div>
+
+          <div class="color-item">
+            <div class="color-preview" style="background-color: #f7d768">
+              <div class="color-preview-text">Tertiary Container</div>
+            </div>
+            <div class="color-info">
+              <div class="color-name">
+                Tertiary Container
+                <button class="copy-btn" data-color="#F7D768">📋</button>
+              </div>
+              <div class="color-hex">#F7D768</div>
+            </div>
+          </div>
+
+          <div class="color-item">
+            <div class="color-preview" style="background-color: #f6fafa">
+              <div class="color-preview-text" style="color: #181c1d">
+                Background
+              </div>
+            </div>
+            <div class="color-info">
+              <div class="color-name">
+                Background
+                <button class="copy-btn" data-color="#F6FAFA">📋</button>
+              </div>
+              <div class="color-hex">#F6FAFA</div>
+            </div>
+          </div>
+
+          <div class="color-item">
+            <div class="color-preview" style="background-color: #181c1d">
+              <div class="color-preview-text">On Background</div>
+            </div>
+            <div class="color-info">
+              <div class="color-name">
+                On Background
+                <button class="copy-btn" data-color="#181C1D">📋</button>
+              </div>
+              <div class="color-hex">#181C1D</div>
+            </div>
+          </div>
+
+          <div class="color-item">
+            <div class="color-preview" style="background-color: #d9e5e5">
+              <div class="color-preview-text" style="color: #181c1d">
+                Surface Variant
+              </div>
+            </div>
+            <div class="color-info">
+              <div class="color-name">
+                Surface Variant
+                <button class="copy-btn" data-color="#D9E5E5">📋</button>
+              </div>
+              <div class="color-hex">#D9E5E5</div>
+            </div>
+          </div>
+
+          <div class="color-item">
+            <div class="color-preview" style="background-color: #ba1a1a">
+              <div class="color-preview-text">Error</div>
+            </div>
+            <div class="color-info">
+              <div class="color-name">
+                Error
+                <button class="copy-btn" data-color="#BA1A1A">📋</button>
+              </div>
+              <div class="color-hex">#BA1A1A</div>
+            </div>
+          </div>
+
+          <div class="color-item">
+            <div class="color-preview" style="background-color: #ffdad6">
+              <div class="color-preview-text" style="color: #181c1d">
+                Error Container
+              </div>
+            </div>
+            <div class="color-info">
+              <div class="color-name">
+                Error Container
+                <button class="copy-btn" data-color="#FFDAD6">📋</button>
+              </div>
+              <div class="color-hex">#FFDAD6</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<div class="section">
+  <h2>Typography</h2>
+  <p>
+    The application uses Quicksand as its primary font family with various
+    weights.
+  </p>
+  <br/>
+
+  <div class="font-preview">
+    <div class="font-row">
+      <div class="font-name">Light</div>
+      <div class="font-example font-light">
+        The quick brown fox jumps over the lazy dog.
+      </div>
+      <div class="font-value">Quicksand-Light</div>
+    </div>
+
+    <div class="font-row">
+      <div class="font-name">Regular</div>
+      <div class="font-example font-regular">
+        The quick brown fox jumps over the lazy dog.
+      </div>
+      <div class="font-value">Quicksand-Regular</div>
+    </div>
+
+    <div class="font-row">
+      <div class="font-name">Medium</div>
+      <div class="font-example font-medium">
+        The quick brown fox jumps over the lazy dog.
+      </div>
+      <div class="font-value">Quicksand-Medium</div>
+    </div>
+
+    <div class="font-row">
+      <div class="font-name">SemiBold</div>
+      <div class="font-example font-semibold">
+        The quick brown fox jumps over the lazy dog.
+      </div>
+      <div class="font-value">Quicksand-SemiBold</div>
+    </div>
+
+    <div class="font-row">
+      <div class="font-name">Bold</div>
+      <div class="font-example font-bold">
+        The quick brown fox jumps over the lazy dog.
+      </div>
+      <div class="font-value">Quicksand-Bold</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Spacing</h2>
+  <p>Consistent spacing values used throughout the application.</p>
+
+  <div class="spacing-grid">
+    <div class="spacing-item">
+      <div class="spacing-name">Extra Small (xs)</div>
+      <div class="spacing-value">4px</div>
+      <div class="spacing-preview" style="height: 4px"></div>
+    </div>
+
+    <div class="spacing-item">
+      <div class="spacing-name">Small (sm)</div>
+      <div class="spacing-value">8px</div>
+      <div class="spacing-preview" style="height: 8px"></div>
+    </div>
+
+    <div class="spacing-item">
+      <div class="spacing-name">Medium (md)</div>
+      <div class="spacing-value">16px</div>
+      <div class="spacing-preview" style="height: 16px"></div>
+    </div>
+
+    <div class="spacing-item">
+      <div class="spacing-name">Large (lg)</div>
+      <div class="spacing-value">24px</div>
+      <div class="spacing-preview" style="height: 24px"></div>
+    </div>
+
+    <div class="spacing-item">
+      <div class="spacing-name">Extra Large (xl)</div>
+      <div class="spacing-value">32px</div>
+      <div class="spacing-preview" style="height: 32px"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+            <h2>Tailwind Colors</h2>
+            <p>A comprehensive set of Tailwind colors available in the theme.</p>
+            
+            <div class="tailwind-colors-container">
+            <div class="color-category">
+                <h3>Purple</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #f5f3ff; color: #000;">
+                        <span>50</span>
+                        <span>#f5f3ff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ede9fe; color: #000;">
+                        <span>100</span>
+                        <span>#ede9fe</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ddd6fe; color: #000;">
+                        <span>200</span>
+                        <span>#ddd6fe</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #c4b5fd; color: #000;">
+                        <span>300</span>
+                        <span>#c4b5fd</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a78bfa; color: #fff;">
+                        <span>400</span>
+                        <span>#a78bfa</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #8b5cf6; color: #fff;">
+                        <span>500</span>
+                        <span>#8b5cf6</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #7c3aed; color: #fff;">
+                        <span>600</span>
+                        <span>#7c3aed</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #6d28d9; color: #fff;">
+                        <span>700</span>
+                        <span>#6d28d9</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #5b21b6; color: #fff;">
+                        <span>800</span>
+                        <span>#5b21b6</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #4c1d95; color: #fff;">
+                        <span>900</span>
+                        <span>#4c1d95</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #2e1065; color: #fff;">
+                        <span>950</span>
+                        <span>#2e1065</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="color-category">
+                <h3>Teal</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #f0fdfa; color: #000;">
+                        <span>50</span>
+                        <span>#f0fdfa</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ccfbf1; color: #000;">
+                        <span>100</span>
+                        <span>#ccfbf1</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #99f6e4; color: #000;">
+                        <span>200</span>
+                        <span>#99f6e4</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #5eead4; color: #000;">
+                        <span>300</span>
+                        <span>#5eead4</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #2dd4bf; color: #000;">
+                        <span>400</span>
+                        <span>#2dd4bf</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #14b8a6; color: #fff;">
+                        <span>500</span>
+                        <span>#14b8a6</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #0d9488; color: #fff;">
+                        <span>600</span>
+                        <span>#0d9488</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #0f766e; color: #fff;">
+                        <span>700</span>
+                        <span>#0f766e</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #115e59; color: #fff;">
+                        <span>800</span>
+                        <span>#115e59</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #134e4a; color: #fff;">
+                        <span>900</span>
+                        <span>#134e4a</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #042f2e; color: #fff;">
+                        <span>950</span>
+                        <span>#042f2e</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="color-category">
+                <h3>Pink</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #fdf2f8; color: #000;">
+                        <span>50</span>
+                        <span>#fdf2f8</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fce7f3; color: #000;">
+                        <span>100</span>
+                        <span>#fce7f3</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fbcfe8; color: #000;">
+                        <span>200</span>
+                        <span>#fbcfe8</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f9a8d4; color: #000;">
+                        <span>300</span>
+                        <span>#f9a8d4</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f472b6; color: #fff;">
+                        <span>400</span>
+                        <span>#f472b6</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ec4899; color: #fff;">
+                        <span>500</span>
+                        <span>#ec4899</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #db2777; color: #fff;">
+                        <span>600</span>
+                        <span>#db2777</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #be185d; color: #fff;">
+                        <span>700</span>
+                        <span>#be185d</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #9d174d; color: #fff;">
+                        <span>800</span>
+                        <span>#9d174d</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #831843; color: #fff;">
+                        <span>900</span>
+                        <span>#831843</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #500724; color: #fff;">
+                        <span>950</span>
+                        <span>#500724</span>
+                    </div>
+                </div>
+            </div>
+<div class="color-category">
+                <h3>Gray</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #f9fafb; color: #000;">
+                        <span>50</span>
+                        <span>#f9fafb</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f3f4f6; color: #000;">
+                        <span>100</span>
+                        <span>#f3f4f6</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #e5e7eb; color: #000;">
+                        <span>200</span>
+                        <span>#e5e7eb</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #d1d5db; color: #000;">
+                        <span>300</span>
+                        <span>#d1d5db</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #9ca3af; color: #000;">
+                        <span>400</span>
+                        <span>#9ca3af</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #6b7280; color: #fff;">
+                        <span>500</span>
+                        <span>#6b7280</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #4b5563; color: #fff;">
+                        <span>600</span>
+                        <span>#4b5563</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #374151; color: #fff;">
+                        <span>700</span>
+                        <span>#374151</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #1f2937; color: #fff;">
+                        <span>800</span>
+                        <span>#1f2937</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #111827; color: #fff;">
+                        <span>900</span>
+                        <span>#111827</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #030712; color: #fff;">
+                        <span>950</span>
+                        <span>#030712</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Zinc</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #fafafa; color: #000;">
+                        <span>50</span>
+                        <span>#fafafa</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f4f4f5; color: #000;">
+                        <span>100</span>
+                        <span>#f4f4f5</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #e4e4e7; color: #000;">
+                        <span>200</span>
+                        <span>#e4e4e7</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #d4d4d8; color: #000;">
+                        <span>300</span>
+                        <span>#d4d4d8</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a1a1aa; color: #000;">
+                        <span>400</span>
+                        <span>#a1a1aa</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #71717a; color: #fff;">
+                        <span>500</span>
+                        <span>#71717a</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #52525b; color: #fff;">
+                        <span>600</span>
+                        <span>#52525b</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #3f3f46; color: #fff;">
+                        <span>700</span>
+                        <span>#3f3f46</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #27272a; color: #fff;">
+                        <span>800</span>
+                        <span>#27272a</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #18181b; color: #fff;">
+                        <span>900</span>
+                        <span>#18181b</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #09090b; color: #fff;">
+                        <span>950</span>
+                        <span>#09090b</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Neutral</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #fafafa; color: #000;">
+                        <span>50</span>
+                        <span>#fafafa</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f5f5f5; color: #000;">
+                        <span>100</span>
+                        <span>#f5f5f5</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #e5e5e5; color: #000;">
+                        <span>200</span>
+                        <span>#e5e5e5</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #d4d4d4; color: #000;">
+                        <span>300</span>
+                        <span>#d4d4d4</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a3a3a3; color: #000;">
+                        <span>400</span>
+                        <span>#a3a3a3</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #737373; color: #fff;">
+                        <span>500</span>
+                        <span>#737373</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #525252; color: #fff;">
+                        <span>600</span>
+                        <span>#525252</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #404040; color: #fff;">
+                        <span>700</span>
+                        <span>#404040</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #262626; color: #fff;">
+                        <span>800</span>
+                        <span>#262626</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #171717; color: #fff;">
+                        <span>900</span>
+                        <span>#171717</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #0a0a0a; color: #fff;">
+                        <span>950</span>
+                        <span>#0a0a0a</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Stone</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #fafaf9; color: #000;">
+                        <span>50</span>
+                        <span>#fafaf9</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f5f5f4; color: #000;">
+                        <span>100</span>
+                        <span>#f5f5f4</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #e7e5e4; color: #000;">
+                        <span>200</span>
+                        <span>#e7e5e4</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #d6d3d1; color: #000;">
+                        <span>300</span>
+                        <span>#d6d3d1</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a8a29e; color: #000;">
+                        <span>400</span>
+                        <span>#a8a29e</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #78716c; color: #fff;">
+                        <span>500</span>
+                        <span>#78716c</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #57534e; color: #fff;">
+                        <span>600</span>
+                        <span>#57534e</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #44403c; color: #fff;">
+                        <span>700</span>
+                        <span>#44403c</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #292524; color: #fff;">
+                        <span>800</span>
+                        <span>#292524</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #1c1917; color: #fff;">
+                        <span>900</span>
+                        <span>#1c1917</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #0c0a09; color: #fff;">
+                        <span>950</span>
+                        <span>#0c0a09</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Base Colors</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #000000; color: #fff;">
+                        <span>Black</span>
+                        <span>#000000</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ffffff; color: #000; border: 1px solid #eee;">
+                        <span>White</span>
+                        <span>#ffffff</span>
+                    </div>
+                </div>
+            </div>
+<div class="color-category">
+                <h3>Purple</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #faf5ff; color: #000;">
+                        <span>50</span>
+                        <span>#faf5ff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f3e8ff; color: #000;">
+                        <span>100</span>
+                        <span>#f3e8ff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #e9d5ff; color: #000;">
+                        <span>200</span>
+                        <span>#e9d5ff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #d8b4fe; color: #000;">
+                        <span>300</span>
+                        <span>#d8b4fe</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #c084fc; color: #000;">
+                        <span>400</span>
+                        <span>#c084fc</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a855f7; color: #fff;">
+                        <span>500</span>
+                        <span>#a855f7</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #9333ea; color: #fff;">
+                        <span>600</span>
+                        <span>#9333ea</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #7e22ce; color: #fff;">
+                        <span>700</span>
+                        <span>#7e22ce</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #6b21a8; color: #fff;">
+                        <span>800</span>
+                        <span>#6b21a8</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #581c87; color: #fff;">
+                        <span>900</span>
+                        <span>#581c87</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #3b0764; color: #fff;">
+                        <span>950</span>
+                        <span>#3b0764</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Fuchsia</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #fdf4ff; color: #000;">
+                        <span>50</span>
+                        <span>#fdf4ff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fae8ff; color: #000;">
+                        <span>100</span>
+                        <span>#fae8ff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f5d0fe; color: #000;">
+                        <span>200</span>
+                        <span>#f5d0fe</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f0abfc; color: #000;">
+                        <span>300</span>
+                        <span>#f0abfc</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #e879f9; color: #000;">
+                        <span>400</span>
+                        <span>#e879f9</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #d946ef; color: #fff;">
+                        <span>500</span>
+                        <span>#d946ef</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #c026d3; color: #fff;">
+                        <span>600</span>
+                        <span>#c026d3</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a21caf; color: #fff;">
+                        <span>700</span>
+                        <span>#a21caf</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #86198f; color: #fff;">
+                        <span>800</span>
+                        <span>#86198f</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #701a75; color: #fff;">
+                        <span>900</span>
+                        <span>#701a75</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #4a044e; color: #fff;">
+                        <span>950</span>
+                        <span>#4a044e</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Rose</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #fff1f2; color: #000;">
+                        <span>50</span>
+                        <span>#fff1f2</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ffe4e6; color: #000;">
+                        <span>100</span>
+                        <span>#ffe4e6</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fecdd3; color: #000;">
+                        <span>200</span>
+                        <span>#fecdd3</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fda4af; color: #000;">
+                        <span>300</span>
+                        <span>#fda4af</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fb7185; color: #000;">
+                        <span>400</span>
+                        <span>#fb7185</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f43f5e; color: #fff;">
+                        <span>500</span>
+                        <span>#f43f5e</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #e11d48; color: #fff;">
+                        <span>600</span>
+                        <span>#e11d48</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #be123c; color: #fff;">
+                        <span>700</span>
+                        <span>#be123c</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #9f1239; color: #fff;">
+                        <span>800</span>
+                        <span>#9f1239</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #881337; color: #fff;">
+                        <span>900</span>
+                        <span>#881337</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #4c0519; color: #fff;">
+                        <span>950</span>
+                        <span>#4c0519</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Slate</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #f8fafc; color: #000;">
+                        <span>50</span>
+                        <span>#f8fafc</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f1f5f9; color: #000;">
+                        <span>100</span>
+                        <span>#f1f5f9</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #e2e8f0; color: #000;">
+                        <span>200</span>
+                        <span>#e2e8f0</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #cbd5e1; color: #000;">
+                        <span>300</span>
+                        <span>#cbd5e1</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #94a3b8; color: #000;">
+                        <span>400</span>
+                        <span>#94a3b8</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #64748b; color: #fff;">
+                        <span>500</span>
+                        <span>#64748b</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #475569; color: #fff;">
+                        <span>600</span>
+                        <span>#475569</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #334155; color: #fff;">
+                        <span>700</span>
+                        <span>#334155</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #1e293b; color: #fff;">
+                        <span>800</span>
+                        <span>#1e293b</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #0f172a; color: #fff;">
+                        <span>900</span>
+                        <span>#0f172a</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #020617; color: #fff;">
+                        <span>950</span>
+                        <span>#020617</span>
+                    </div>
+                </div>
+            </div>
+<div class="color-category">
+                <h3>Sky</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #f0f9ff; color: #000;">
+                        <span>50</span>
+                        <span>#f0f9ff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #e0f2fe; color: #000;">
+                        <span>100</span>
+                        <span>#e0f2fe</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #bae6fd; color: #000;">
+                        <span>200</span>
+                        <span>#bae6fd</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #7dd3fc; color: #000;">
+                        <span>300</span>
+                        <span>#7dd3fc</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #38bdf8; color: #000;">
+                        <span>400</span>
+                        <span>#38bdf8</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #0ea5e9; color: #fff;">
+                        <span>500</span>
+                        <span>#0ea5e9</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #0284c7; color: #fff;">
+                        <span>600</span>
+                        <span>#0284c7</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #0369a1; color: #fff;">
+                        <span>700</span>
+                        <span>#0369a1</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #075985; color: #fff;">
+                        <span>800</span>
+                        <span>#075985</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #0c4a6e; color: #fff;">
+                        <span>900</span>
+                        <span>#0c4a6e</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #082f49; color: #fff;">
+                        <span>950</span>
+                        <span>#082f49</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Blue</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #eff6ff; color: #000;">
+                        <span>50</span>
+                        <span>#eff6ff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #dbeafe; color: #000;">
+                        <span>100</span>
+                        <span>#dbeafe</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #bfdbfe; color: #000;">
+                        <span>200</span>
+                        <span>#bfdbfe</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #93c5fd; color: #000;">
+                        <span>300</span>
+                        <span>#93c5fd</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #60a5fa; color: #000;">
+                        <span>400</span>
+                        <span>#60a5fa</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #3b82f6; color: #fff;">
+                        <span>500</span>
+                        <span>#3b82f6</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #2563eb; color: #fff;">
+                        <span>600</span>
+                        <span>#2563eb</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #1d4ed8; color: #fff;">
+                        <span>700</span>
+                        <span>#1d4ed8</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #1e40af; color: #fff;">
+                        <span>800</span>
+                        <span>#1e40af</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #1e3a8a; color: #fff;">
+                        <span>900</span>
+                        <span>#1e3a8a</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #172554; color: #fff;">
+                        <span>950</span>
+                        <span>#172554</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Indigo</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #eef2ff; color: #000;">
+                        <span>50</span>
+                        <span>#eef2ff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #e0e7ff; color: #000;">
+                        <span>100</span>
+                        <span>#e0e7ff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #c7d2fe; color: #000;">
+                        <span>200</span>
+                        <span>#c7d2fe</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a5b4fc; color: #000;">
+                        <span>300</span>
+                        <span>#a5b4fc</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #818cf8; color: #000;">
+                        <span>400</span>
+                        <span>#818cf8</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #6366f1; color: #fff;">
+                        <span>500</span>
+                        <span>#6366f1</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #4f46e5; color: #fff;">
+                        <span>600</span>
+                        <span>#4f46e5</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #4338ca; color: #fff;">
+                        <span>700</span>
+                        <span>#4338ca</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #3730a3; color: #fff;">
+                        <span>800</span>
+                        <span>#3730a3</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #312e81; color: #fff;">
+                        <span>900</span>
+                        <span>#312e81</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #1e1b4b; color: #fff;">
+                        <span>950</span>
+                        <span>#1e1b4b</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Violet</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #f5f3ff; color: #000;">
+                        <span>50</span>
+                        <span>#f5f3ff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ede9fe; color: #000;">
+                        <span>100</span>
+                        <span>#ede9fe</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ddd6fe; color: #000;">
+                        <span>200</span>
+                        <span>#ddd6fe</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #c4b5fd; color: #000;">
+                        <span>300</span>
+                        <span>#c4b5fd</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a78bfa; color: #000;">
+                        <span>400</span>
+                        <span>#a78bfa</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #8b5cf6; color: #fff;">
+                        <span>500</span>
+                        <span>#8b5cf6</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #7c3aed; color: #fff;">
+                        <span>600</span>
+                        <span>#7c3aed</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #6d28d9; color: #fff;">
+                        <span>700</span>
+                        <span>#6d28d9</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #5b21b6; color: #fff;">
+                        <span>800</span>
+                        <span>#5b21b6</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #4c1d95; color: #fff;">
+                        <span>900</span>
+                        <span>#4c1d95</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #2e1065; color: #fff;">
+                        <span>950</span>
+                        <span>#2e1065</span>
+                    </div>
+                </div>
+            </div>
+<div class="color-category">
+                <h3>Lime</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #f7fee7; color: #000;">
+                        <span>50</span>
+                        <span>#f7fee7</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ecfccb; color: #000;">
+                        <span>100</span>
+                        <span>#ecfccb</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #d9f99d; color: #000;">
+                        <span>200</span>
+                        <span>#d9f99d</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #bef264; color: #000;">
+                        <span>300</span>
+                        <span>#bef264</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a3e635; color: #000;">
+                        <span>400</span>
+                        <span>#a3e635</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #84cc16; color: #000;">
+                        <span>500</span>
+                        <span>#84cc16</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #65a30d; color: #fff;">
+                        <span>600</span>
+                        <span>#65a30d</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #4d7c0f; color: #fff;">
+                        <span>700</span>
+                        <span>#4d7c0f</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #3f6212; color: #fff;">
+                        <span>800</span>
+                        <span>#3f6212</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #365314; color: #fff;">
+                        <span>900</span>
+                        <span>#365314</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #1a2e05; color: #fff;">
+                        <span>950</span>
+                        <span>#1a2e05</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Green</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #f0fdf4; color: #000;">
+                        <span>50</span>
+                        <span>#f0fdf4</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #dcfce7; color: #000;">
+                        <span>100</span>
+                        <span>#dcfce7</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #bbf7d0; color: #000;">
+                        <span>200</span>
+                        <span>#bbf7d0</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #86efac; color: #000;">
+                        <span>300</span>
+                        <span>#86efac</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #4ade80; color: #000;">
+                        <span>400</span>
+                        <span>#4ade80</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #22c55e; color: #000;">
+                        <span>500</span>
+                        <span>#22c55e</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #16a34a; color: #fff;">
+                        <span>600</span>
+                        <span>#16a34a</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #15803d; color: #fff;">
+                        <span>700</span>
+                        <span>#15803d</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #166534; color: #fff;">
+                        <span>800</span>
+                        <span>#166534</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #14532d; color: #fff;">
+                        <span>900</span>
+                        <span>#14532d</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #052e16; color: #fff;">
+                        <span>950</span>
+                        <span>#052e16</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Emerald</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #ecfdf5; color: #000;">
+                        <span>50</span>
+                        <span>#ecfdf5</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #d1fae5; color: #000;">
+                        <span>100</span>
+                        <span>#d1fae5</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a7f3d0; color: #000;">
+                        <span>200</span>
+                        <span>#a7f3d0</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #6ee7b7; color: #000;">
+                        <span>300</span>
+                        <span>#6ee7b7</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #34d399; color: #000;">
+                        <span>400</span>
+                        <span>#34d399</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #10b981; color: #fff;">
+                        <span>500</span>
+                        <span>#10b981</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #059669; color: #fff;">
+                        <span>600</span>
+                        <span>#059669</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #047857; color: #fff;">
+                        <span>700</span>
+                        <span>#047857</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #065f46; color: #fff;">
+                        <span>800</span>
+                        <span>#065f46</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #064e3b; color: #fff;">
+                        <span>900</span>
+                        <span>#064e3b</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #022c22; color: #fff;">
+                        <span>950</span>
+                        <span>#022c22</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Cyan</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #ecfeff; color: #000;">
+                        <span>50</span>
+                        <span>#ecfeff</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #cffafe; color: #000;">
+                        <span>100</span>
+                        <span>#cffafe</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a5f3fc; color: #000;">
+                        <span>200</span>
+                        <span>#a5f3fc</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #67e8f9; color: #000;">
+                        <span>300</span>
+                        <span>#67e8f9</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #22d3ee; color: #000;">
+                        <span>400</span>
+                        <span>#22d3ee</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #06b6d4; color: #fff;">
+                        <span>500</span>
+                        <span>#06b6d4</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #0891b2; color: #fff;">
+                        <span>600</span>
+                        <span>#0891b2</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #0e7490; color: #fff;">
+                        <span>700</span>
+                        <span>#0e7490</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #155e75; color: #fff;">
+                        <span>800</span>
+                        <span>#155e75</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #164e63; color: #fff;">
+                        <span>900</span>
+                        <span>#164e63</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #083344; color: #fff;">
+                        <span>950</span>
+                        <span>#083344</span>
+                    </div>
+                </div>
+            </div>
+<div class="color-category">
+                <h3>Red</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #fff1f2; color: #000;">
+                        <span>50</span>
+                        <span>#fff1f2</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ffe4e6; color: #000;">
+                        <span>100</span>
+                        <span>#ffe4e6</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fecdd3; color: #000;">
+                        <span>200</span>
+                        <span>#fecdd3</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fda4af; color: #000;">
+                        <span>300</span>
+                        <span>#fda4af</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fb7185; color: #fff;">
+                        <span>400</span>
+                        <span>#fb7185</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f43f5e; color: #fff;">
+                        <span>500</span>
+                        <span>#f43f5e</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #e11d48; color: #fff;">
+                        <span>600</span>
+                        <span>#e11d48</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #be123c; color: #fff;">
+                        <span>700</span>
+                        <span>#be123c</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #9f1239; color: #fff;">
+                        <span>800</span>
+                        <span>#9f1239</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #881337; color: #fff;">
+                        <span>900</span>
+                        <span>#881337</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #4c0519; color: #fff;">
+                        <span>950</span>
+                        <span>#4c0519</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Orange</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #fff7ed; color: #000;">
+                        <span>50</span>
+                        <span>#fff7ed</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ffedd5; color: #000;">
+                        <span>100</span>
+                        <span>#ffedd5</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fed7aa; color: #000;">
+                        <span>200</span>
+                        <span>#fed7aa</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fdba74; color: #000;">
+                        <span>300</span>
+                        <span>#fdba74</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fb923c; color: #000;">
+                        <span>400</span>
+                        <span>#fb923c</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f97316; color: #fff;">
+                        <span>500</span>
+                        <span>#f97316</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ea580c; color: #fff;">
+                        <span>600</span>
+                        <span>#ea580c</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #c2410c; color: #fff;">
+                        <span>700</span>
+                        <span>#c2410c</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #9a3412; color: #fff;">
+                        <span>800</span>
+                        <span>#9a3412</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #7c2d12; color: #fff;">
+                        <span>900</span>
+                        <span>#7c2d12</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #431407; color: #fff;">
+                        <span>950</span>
+                        <span>#431407</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Amber</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #fffbeb; color: #000;">
+                        <span>50</span>
+                        <span>#fffbeb</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fef3c7; color: #000;">
+                        <span>100</span>
+                        <span>#fef3c7</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fde68a; color: #000;">
+                        <span>200</span>
+                        <span>#fde68a</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fcd34d; color: #000;">
+                        <span>300</span>
+                        <span>#fcd34d</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fbbf24; color: #000;">
+                        <span>400</span>
+                        <span>#fbbf24</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #f59e0b; color: #000;">
+                        <span>500</span>
+                        <span>#f59e0b</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #d97706; color: #fff;">
+                        <span>600</span>
+                        <span>#d97706</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #b45309; color: #fff;">
+                        <span>700</span>
+                        <span>#b45309</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #92400e; color: #fff;">
+                        <span>800</span>
+                        <span>#92400e</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #78350f; color: #fff;">
+                        <span>900</span>
+                        <span>#78350f</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #451a03; color: #fff;">
+                        <span>950</span>
+                        <span>#451a03</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-category">
+                <h3>Yellow</h3>
+                <div class="color-shades">
+                    <div class="color-shade" style="background-color: #fefce8; color: #000;">
+                        <span>50</span>
+                        <span>#fefce8</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fef9c3; color: #000;">
+                        <span>100</span>
+                        <span>#fef9c3</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fef08a; color: #000;">
+                        <span>200</span>
+                        <span>#fef08a</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #fde047; color: #000;">
+                        <span>300</span>
+                        <span>#fde047</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #facc15; color: #000;">
+                        <span>400</span>
+                        <span>#facc15</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #eab308; color: #000;">
+                        <span>500</span>
+                        <span>#eab308</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #ca8a04; color: #fff;">
+                        <span>600</span>
+                        <span>#ca8a04</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #a16207; color: #fff;">
+                        <span>700</span>
+                        <span>#a16207</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #854d0e; color: #fff;">
+                        <span>800</span>
+                        <span>#854d0e</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #713f12; color: #fff;">
+                        <span>900</span>
+                        <span>#713f12</span>
+                    </div>
+                    <div class="color-shade" style="background-color: #422006; color: #fff;">
+                        <span>950</span>
+                        <span>#422006</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="copy-tooltip" id="copyTooltip">Copied to clipboard!</div>
+
+    <script>
+        // Copy functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Copy buttons
+            const copyButtons = document.querySelectorAll('.copy-btn');
+            const copyTooltip = document.getElementById('copyTooltip');
+            
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const colorValue = this.getAttribute('data-color');
+                    navigator.clipboard.writeText(colorValue).then(() => {
+                        // Show tooltip
+                        copyTooltip.classList.add('show');
+                        setTimeout(() => {
+                            copyTooltip.classList.remove('show');
+                        }, 1500);
+                    });
+                });
+            });
+            
+            // Color hex values
+            const colorHexes = document.querySelectorAll('.color-hex');
+            
+            colorHexes.forEach(hex => {
+                hex.addEventListener('click', function() {
+                    const colorValue = this.textContent;
+                    navigator.clipboard.writeText(colorValue).then(() => {
+                        // Show tooltip
+                        copyTooltip.classList.add('show');
+                        setTimeout(() => {
+                            copyTooltip.classList.remove('show');
+                        }, 1500);
+                    });
+                });
+            });
+            
+            // Font values
+            const fontValues = document.querySelectorAll('.font-value');
+            
+            fontValues.forEach(value => {
+                value.addEventListener('click', function() {
+                    const fontValue = this.textContent;
+                    navigator.clipboard.writeText(fontValue).then(() => {
+                        // Show tooltip
+                        copyTooltip.classList.add('show');
+                        setTimeout(() => {
+                            copyTooltip.classList.remove('show');
+                        }, 1500);
+                    });
+                });
+            });
+            
+            // Spacing values
+            const spacingValues = document.querySelectorAll('.spacing-value');
+            
+            spacingValues.forEach(value => {
+                value.addEventListener('click', function() {
+                    const spacingValue = this.textContent;
+                    navigator.clipboard.writeText(spacingValue).then(() => {
+                        // Show tooltip
+                        copyTooltip.classList.add('show');
+                        setTimeout(() => {
+                            copyTooltip.classList.remove('show');
+                        }, 1500);
+                    });
+                });
+            });
+            
+            // Color shades
+            const colorShades = document.querySelectorAll('.color-shade');
+            
+            colorShades.forEach(shade => {
+                shade.addEventListener('click', function() {
+                    const colorValue = this.querySelector('span:last-child').textContent;
+                    navigator.clipboard.writeText(colorValue).then(() => {
+                        // Show tooltip
+                        copyTooltip.classList.add('show');
+                        setTimeout(() => {
+                            copyTooltip.classList.remove('show');
+                        }, 1500);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
